@@ -1,0 +1,25 @@
+# firefox/docker-compose.yml
+version: '3.6'
+
+services:
+  firefox:
+    image: hub.foundries.io/ew2023-customer1/firefox:latest
+    restart: always
+    tty: true
+    network_mode: "host"
+    command: "--kiosk www.foundries.io"
+    tmpfs:
+      - /run
+      - /var/lock
+      - /var/log
+      - /tmp
+    volumes:
+      - /run/user/63:/run/user/63
+      - /dev/dri:/dev/dri
+    device_cgroup_rules:
+      - 'c 226:* rmw'
+    environment:
+      WAYLAND_USER: "weston"
+      XDG_RUNTIME_DIR: "/run/user/63"
+      WAYLAND_DISPLAY: "wayland-1"
+      TIMER: "0"

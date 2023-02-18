@@ -1,0 +1,30 @@
+# /lmp-qt5-qemuarm64-secureboot/docker-compose.yml
+# https://source.foundries.io/factories/lmp-demo/lmp-manifest.git/?h=lmp-qt5
+# docker import lmp-factory-image-qemuarm64-secureboot.tar.bz2 munoz0raul/lmp-qt5-qemuarm64-secureboot
+# docker push munoz0raul/lmp-qt5-qemuarm64-secureboot
+version: '3.6'
+
+services:
+  lmp-qt5-qemuarm64-secureboot:
+    image: munoz0raul/lmp-qt5-qemuarm64-secureboot:target-64
+    restart: always
+    tty: true
+    network_mode: "host"
+    entrypoint: [ "/bin/bash" ]
+    command: [ "/usr/share/qt5/qt5.sh" ]
+    tmpfs:
+      - /run
+      - /var/lock
+      - /var/log
+      - /tmp
+    volumes:
+      - /run/user/63:/run/user/63
+      - /dev/dri:/dev/dri
+      - ./qt5.sh:/usr/share/qt5/qt5.sh
+    device_cgroup_rules:
+      - 'c 226:* rmw'
+    environment:
+      WAYLAND_USER: "weston"
+      XDG_RUNTIME_DIR: "/run/user/63"
+      WAYLAND_DISPLAY: "wayland-1"
+      TIMER: "0"
